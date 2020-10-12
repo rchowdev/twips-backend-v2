@@ -1,14 +1,18 @@
 {
-  "name": "twips-backend",
-  "version": "1.0.0",
-  "description": "Backend for Twips project.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+	"name": "twips-backend",
+	"version": "1.0.0",
+	"description": "Backend for Twips project.",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "nodemon index.js"
+	},
+	"author": "Raymond Chow",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.17.1"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.4"
+	}
 }
