@@ -17,6 +17,15 @@ const clipSchema = mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	playlists: {
+		type: [
+			{
+				type: mongoose.SchemaTypes.ObjectId,
+				ref: "Playlist",
+			},
+		],
+		select: false,
+	},
 });
 
 export default mongoose.model("Clip", clipSchema);

@@ -1,18 +1,64 @@
 import express from "express";
 
 import Clip from "../models/clip.js";
+import Playlist from "../models/playlist.js";
 import authorize from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/", authorize, async (req, res) => {
-	const clip = new Clip(req.body.clip);
+// Get clips from a playlist
+router.get("/playlists/:playlist_id/clips", authorize, async (req, res) => {
+	try {
+		const playlist = await Playlist.findById(req.params.playlist_id);
+
+		if (!playlist) {
+			res.status(404).send({ error: "Playlist not found." });
+		}
+
+		await playlist
+			.populate({
+				path: "clips",
+				select: "title broadcaster twitch_tr_id thumbnail -playlists",
+			})
+			.execPopulate();
+
+		res.status(200).send(playlist.clips);
+	} catch (err) {
+		res.status(500).send(err);
+	}
+});
+
+// Create and add a clip to playlist
+router.post("/playlists/:playlist_id/clips", authorize, async (req, res) => {
+	const twitch_tr_id = req.body.clip.twitch_tr_id;
+	const playlist_id = req.params.playlist_id;
+	// Find an existing clip w/ same twitch id in playlist
+	const existingClip = await Clip.findOne({
+		twitch_tr_id,
+		playlists: { $in: playlist_id },
+	});
+
+	// If there is a clip w/ same twitch id in playlist, don't
+	// create new clip
+	if (existingClip) {
+		return res.status(200).send("Clip is already in playlist.");
+	}
+
+	// clip.playlists.push(req.params.playlist_id);
 
 	try {
-		await clip.save();
+		const clip = await Clip.findOneAndUpdate(
+			req.body.clip,
+			{ $push: { playlists: playlist_id } },
+			{
+				upsert: true,
+				new: true,
+			}
+		);
+
 		res.status(201).send(clip);
 	} catch (err) {
-		res.status(400).send({ error: err });
+		res.status(400).send({ error: err.message });
 	}
 });
 

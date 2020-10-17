@@ -12,6 +12,6 @@ const routePrefix = "/api/v2";
 app.use(express.json());
 app.use(`${routePrefix}/auth`, authRoutes);
 app.use(`${routePrefix}/playlists`, playlistsRoutes);
-app.use(`${routePrefix}/clips`, clipsRoutes);
+app.use(`${routePrefix}/`, clipsRoutes);
 
 app.listen(port, () => console.log(`Server Running on PORT: ${port}`));
