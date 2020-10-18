@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "node src/index.js",
-		"dev": "nodemon src/index.js"
+		"dev": "nodemon -r dotenv/config  ./src/index.js dotenv_config_path=./config/dev.env"
 	},
 	"author": "Raymond Chow",
 	"license": "ISC",
@@ -19,6 +19,7 @@
 		"validator": "^13.1.17"
 	},
 	"devDependencies": {
+		"dotenv": "^8.2.0",
 		"nodemon": "^2.0.4"
 	}
 }
