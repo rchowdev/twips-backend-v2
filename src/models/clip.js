@@ -24,8 +24,24 @@ const clipSchema = mongoose.Schema({
 				ref: "Playlist",
 			},
 		],
-		select: false,
 	},
 });
 
-export default mongoose.model("Clip", clipSchema);
+clipSchema.methods.toJSON = function () {
+	const clipObj = this.toObject();
+	delete clipObj.playlists;
+
+	return clipObj;
+};
+
+// If playlists field is empty after updating clip,
+// delete the clip
+clipSchema.post("findOneAndUpdate", async function (doc) {
+	if (doc.playlists.length === 0) {
+		doc.remove();
+	}
+});
+
+const Clip = mongoose.model("Clip", clipSchema);
+
+export default Clip;

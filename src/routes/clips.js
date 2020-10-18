@@ -62,4 +62,24 @@ router.post("/playlists/:playlist_id/clips", authorize, async (req, res) => {
 	}
 });
 
+// Delete a clip from playlist
+router.delete(
+	"/playlists/:playlist_id/clips/:clip_id",
+	authorize,
+	async (req, res) => {
+		try {
+			const clip = await Clip.findByIdAndUpdate(
+				req.params.clip_id,
+				{
+					$pull: { playlists: req.params.playlist_id },
+				},
+				{ new: true }
+			);
+
+			res.status(200).send(clip);
+		} catch (err) {
+			res.status(500).send({ error: err.message });
+		}
+	}
+);
 export default router;

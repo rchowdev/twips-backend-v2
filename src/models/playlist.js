@@ -32,10 +32,14 @@ playlistSchema.pre("findOneAndDelete", async function (next) {
 	// Access the query arguments passed in to get id
 	const playlist_id = this.getFilter()["_id"];
 
-	const res = await Clip.updateMany(
-		{ playlists: playlist_id },
-		{ $pull: { playlists: playlist_id } }
-	);
+	try {
+		await Clip.updateMany(
+			{ playlists: playlist_id },
+			{ $pull: { playlists: playlist_id } }
+		);
+	} catch (err) {
+		console.log(err);
+	}
 
 	next();
 });
