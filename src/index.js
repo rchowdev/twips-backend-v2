@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import "./db/mongoose.js";
 import authRoutes from "./routes/auth.js";
@@ -9,6 +10,7 @@ const app = express();
 const port = process.env.PORT;
 const routePrefix = "/api/v2";
 
+app.use(cors());
 app.use(express.json());
 app.use(`${routePrefix}/auth`, authRoutes);
 app.use(`${routePrefix}/playlists`, playlistsRoutes);

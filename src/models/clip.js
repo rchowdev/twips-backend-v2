@@ -17,6 +17,10 @@ const clipSchema = mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	embed_url: {
+		type: String,
+		required: true,
+	},
 	playlists: {
 		type: [
 			{

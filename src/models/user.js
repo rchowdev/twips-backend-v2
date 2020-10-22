@@ -9,38 +9,35 @@ const validateEmail = (value) => {
 
 const emailValidator = [validateEmail, "Not a valid email."];
 
-const userSchema = mongoose.Schema(
-	{
-		first_name: {
-			type: String,
-			required: true,
-		},
-		last_name: {
-			type: String,
-			required: true,
-		},
-		email: {
-			type: String,
-			required: true,
-			validate: emailValidator,
-			unique: true,
-		},
-		password: {
-			type: String,
-			required: true,
-			minlength: 6,
-		},
-		tokens: [
-			{
-				token: {
-					type: String,
-					required: true,
-				},
-			},
-		],
+const userSchema = mongoose.Schema({
+	first_name: {
+		type: String,
+		required: true,
 	},
-	{ id: false }
-);
+	last_name: {
+		type: String,
+		required: true,
+	},
+	email: {
+		type: String,
+		required: true,
+		validate: emailValidator,
+		unique: true,
+	},
+	password: {
+		type: String,
+		required: true,
+		minlength: 6,
+	},
+	tokens: [
+		{
+			token: {
+				type: String,
+				required: true,
+			},
+		},
+	],
+});
 
 userSchema.set("toObject", { virtuals: true });
 userSchema.set("toJSON", { virtuals: true });

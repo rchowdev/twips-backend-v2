@@ -22,11 +22,33 @@ router.get("/playlists/:playlist_id/clips", authorize, async (req, res) => {
 			})
 			.execPopulate();
 
-		res.status(200).send(playlist.clips);
+		res.status(200).send(playlist);
 	} catch (err) {
 		res.status(500).send(err);
 	}
 });
+
+// Get clips from a playlist
+router.get(
+	"/playlists/:playlist_id/clips/:clip_id",
+	authorize,
+	async (req, res) => {
+		try {
+			const clip = await Clip.findOne({
+				twitch_tr_id: req.params.clip_id,
+				playlists: req.params.playlist_id,
+			});
+
+			if (!clip) {
+				return res.status(200).send({ clipIsInPlaylist: false });
+			}
+
+			res.status(200).send({ clipIsInPlaylist: true });
+		} catch (err) {
+			res.status(500).send(err);
+		}
+	}
+);
 
 // Create and add a clip to playlist
 router.post("/playlists/:playlist_id/clips", authorize, async (req, res) => {
@@ -68,8 +90,8 @@ router.delete(
 	authorize,
 	async (req, res) => {
 		try {
-			const clip = await Clip.findByIdAndUpdate(
-				req.params.clip_id,
+			const clip = await Clip.findOneAndUpdate(
+				{ twitch_tr_id: req.params.clip_id },
 				{
 					$pull: { playlists: req.params.playlist_id },
 				},

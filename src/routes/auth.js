@@ -11,9 +11,9 @@ router.post("/signup", async (req, res) => {
 	try {
 		await user.save();
 
-		const token = await user.generateAuthToken();
+		const jwt = await user.generateAuthToken();
 
-		res.status(201).send({ user, token });
+		res.status(201).send({ user, jwt });
 	} catch (err) {
 		res.status(400).send({ error: err.message });
 	}
@@ -22,17 +22,17 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
 	try {
 		const user = await User.findByCredentials(
-			req.body.email,
-			req.body.password
+			req.body.user.email,
+			req.body.user.password
 		);
 
-		const token = await user.generateAuthToken();
+		const jwt = await user.generateAuthToken();
 
 		await user
 			.populate({ path: "playlists", select: "name" })
 			.execPopulate();
 
-		res.status(200).send({ user, token });
+		res.status(200).send({ user, jwt });
 	} catch (err) {
 		res.status(400).send({ error: err.message });
 	}

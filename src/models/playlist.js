@@ -1,20 +1,17 @@
 import mongoose from "mongoose";
 import Clip from "./clip.js";
 
-const playlistSchema = mongoose.Schema(
-	{
-		name: {
-			type: String,
-			required: true,
-		},
-		user: {
-			type: mongoose.SchemaTypes.ObjectId,
-			required: true,
-			ref: "User",
-		},
+const playlistSchema = mongoose.Schema({
+	name: {
+		type: String,
+		required: true,
 	},
-	{ id: false }
-);
+	user: {
+		type: mongoose.SchemaTypes.ObjectId,
+		required: true,
+		ref: "User",
+	},
+});
 
 playlistSchema.set("toJSON", { virtuals: true });
 
